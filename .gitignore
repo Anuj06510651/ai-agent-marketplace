@@ -1,0 +1,44 @@
+# dependencies
+/node_modules/
+/.pnp/
+.pnp.js
+
+# build
+/dist/
+/build/
+
+# local env files
+.env
+.env.*
+
+# vite
+/.vite/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS
+.DS_Store
+
+# editor
+.vscode/
+.idea/
+
+# misc
+coverage/
+coverage-final.json
+
+# local system files
+npm-debug.log
+yarn-debug.log
+
+# optional
+.DS_Store
+
+# Tailwind / PostCSS
+postcss.config.js
+
+# node local binaries
+node_modules/
