@@ -29,6 +29,7 @@ yarn-error.log*
 # misc
 coverage/
 coverage-final.json
+ai-agent-marketplace/
 
 # local system files
 npm-debug.log
