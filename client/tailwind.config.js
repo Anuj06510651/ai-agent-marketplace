@@ -21,7 +21,7 @@ export default {
                 },
                 sidebar: {
                     bg: '#0f172a',
-                    hover: '#1e293b',
+                    hover: 'rgba(30, 41, 59, 1)',
                     active: '#2563eb',
                 }
             },

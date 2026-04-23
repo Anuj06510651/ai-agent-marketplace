@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getAuthHeaders } from '../utils/auth';
+import { buildApiUrl } from '../utils/api';
 
 const predefinedFaqs = [
   {
@@ -114,7 +115,7 @@ export default function WebConcierge() {
 
     try {
       const customFAQs = buildCustomFaqs();
-      const response = await fetch('/api/setup-bot', {
+      const response = await fetch(buildApiUrl('/api/setup-bot'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,7 +181,7 @@ export default function WebConcierge() {
     setChatLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(buildApiUrl('/api/chat'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

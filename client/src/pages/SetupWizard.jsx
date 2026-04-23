@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getAuthHeaders } from '../utils/auth';
+import { buildApiUrl } from '../utils/api';
 
 const steps = [
     { num: 1, label: 'Shop Details' },
@@ -72,7 +73,7 @@ export default function SetupWizard() {
 
         setLoading(true);
         try {
-            const response = await fetch('/api/onboarding', {
+            const response = await fetch(buildApiUrl('/api/onboarding'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,12 +92,8 @@ export default function SetupWizard() {
             setCurrentStep(3);
             setChatTranscript([]);
         } catch (err) {
-            if (err?.name === 'TypeError' || /Failed to fetch/i.test(err?.message || '')) {
-                setError('Cannot reach the backend API. Please run `npm run dev` and ensure MongoDB is running.');
-            } else {
                 setError(err.message || 'Unable to complete setup.');
-            }
-        } finally {
+            } finally {
             setLoading(false);
         }
     };
@@ -117,7 +114,7 @@ export default function SetupWizard() {
 
         setSimulating(true);
         try {
-            const response = await fetch(`/api/chatbots/${result.id}/simulate`, {
+            const response = await fetch(buildApiUrl(`/api/chatbots/${result.id}/simulate`), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -148,11 +145,7 @@ export default function SetupWizard() {
             ]);
             setChatQuestion('');
         } catch (err) {
-            if (err?.name === 'TypeError' || /Failed to fetch/i.test(err?.message || '')) {
-                setChatError('Cannot reach chatbot API. Make sure backend server is running.');
-            } else {
-                setChatError(err.message || 'Unable to simulate chat right now.');
-            }
+            setChatError(err.message || 'Unable to simulate chat right now.');
         } finally {
             setSimulating(false);
         }
