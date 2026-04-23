@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { buildApiUrl } from '../utils/api';
 
 export default function PublicBot() {
   const { slug = '' } = useParams();
@@ -21,7 +22,7 @@ export default function PublicBot() {
       setBotError('');
 
       try {
-        const response = await fetch(`/api/bot/${encodeURIComponent(slug)}`);
+        const response = await fetch(buildApiUrl(`/api/bot/${encodeURIComponent(slug)}`));
         const payload = await response.json();
 
         if (!response.ok || !payload.success) {
@@ -85,7 +86,7 @@ export default function PublicBot() {
     setChatLoading(true);
 
     try {
-      const response = await fetch('/api/chat/public', {
+      const response = await fetch(buildApiUrl('/api/chat/public'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

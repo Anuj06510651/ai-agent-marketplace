@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { saveAuthSession } from '../utils/auth';
+import { buildApiUrl } from '../utils/api';
 
 const initialSignupState = {
   name: '',
@@ -50,7 +51,7 @@ export default function Auth({ onAuthSuccess }) {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch(buildApiUrl('/api/auth/signup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(signupForm),
@@ -77,7 +78,7 @@ export default function Auth({ onAuthSuccess }) {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(buildApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginForm),
@@ -104,7 +105,7 @@ export default function Auth({ onAuthSuccess }) {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
+      const response = await fetch(buildApiUrl('/api/auth/forgot-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(forgotForm),
@@ -142,7 +143,7 @@ export default function Auth({ onAuthSuccess }) {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/auth/reset-password', {
+      const response = await fetch(buildApiUrl('/api/auth/reset-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

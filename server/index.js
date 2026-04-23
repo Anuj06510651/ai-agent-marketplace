@@ -4,8 +4,6 @@ import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
-import compression from 'compression';
 import onboardingRoutes from './routes/onboardingRoutes.js';
 import chatbotRoutes from './routes/chatbotRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
@@ -56,8 +54,6 @@ function getAllowedOrigins() {
 
 const allowedOrigins = getAllowedOrigins();
 
-app.use(helmet());
-app.use(compression());
 app.use(
   cors({
     origin(origin, callback) {
