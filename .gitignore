@@ -39,7 +39,5 @@ yarn-debug.log
 .DS_Store
 
 # Tailwind / PostCSS
-postcss.config.js
-
 # node local binaries
 node_modules/
