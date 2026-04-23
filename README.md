@@ -1,125 +1,125 @@
-# AI Agent Marketplace (WhatsApp Chatbot Prototype)
+# AI Agent Marketplace
 
-This project now includes a complete prototype flow where a shop owner fills a simple onboarding form and gets a ready WhatsApp chatbot profile generated and saved in MongoDB.
+React + Vite frontend with an Express + MongoDB backend for:
 
-## Tech stack
-
-- Frontend: React + Vite + Tailwind
-- Backend: Node.js + Express
-- Database: MongoDB + Mongoose
-
-## What the new feature does
-
-Using the `Setup Wizard` page, a shop owner can submit:
-
-- shop details
-- business type and timings
-- WhatsApp number
-- services offered
-
-The backend creates and stores:
-
-- chatbot receptionist name
-- welcome message
-- quick reply templates
-- fallback message
-- generated prompt for a 24x7 receptionist chatbot
-
-It also now includes a **chatbot simulation brain** for prototype demos:
-
-- intent-style knowledge matching (services, pricing, timing, booking, location)
-- confidence score + intent labels
-- in-memory conversation memory per customer session
-- lead-field capture (name/phone/requirement)
-- escalation behavior for urgent complaints
-
-Brain mode behavior:
-
-- `rules`: local intent engine only (fast, deterministic)
-- `gemini`: Gemini-generated replies
-- `hybrid`: Gemini reply with rule-engine grounding and automatic fallback
+- WhatsApp chatbot onboarding
+- authenticated shop-owner setup flows
+- a web concierge bot with public share links
+- local rule-based or Gemini-backed reply simulation
 
 ## Local setup
 
-### 1) Install dependencies
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2) Add environment file
-
-Create `.env` in project root using `.env.example`:
+### 2. Create the root environment file
 
 ```bash
 cp .env.example .env
 ```
 
-Update `MONGODB_URI` if your MongoDB is not local.
-
-### 2.1) (Optional) Enable Gemini brain
-
-In your root `.env` file, add:
+Recommended local `.env` values:
 
 ```bash
+PORT=5001
+HOST=0.0.0.0
+CLIENT_URL=http://localhost:5173
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+MONGODB_URI=mongodb://127.0.0.1:27017
+MONGODB_DB_NAME=ai_agent_marketplace
+
+# Leave empty in local dev so Vite proxies /api to the backend.
+VITE_API_URL=
+VITE_API_PROXY_TARGET=http://127.0.0.1:5001
+
+JWT_SECRET=replace-with-a-long-random-secret
+JWT_EXPIRES_IN=7d
+RESET_TOKEN_TTL_MINUTES=15
+
 # rules | gemini | hybrid
-BRAIN_MODE=hybrid
-
-# Your key from Google AI Studio
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
-
-# Optional model override
+BRAIN_MODE=rules
+GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.0-flash
 ```
 
-Where to add API key: `PROJECT_ROOT/.env` (same file where `MONGODB_URI` is configured).
+### 3. Start MongoDB
 
-### 3) Ensure MongoDB is running
+Use a local MongoDB instance or MongoDB Atlas.
 
-Use local MongoDB service or MongoDB Atlas connection string.
+### 4. Run the app
 
-### 4) Run app (frontend + backend)
+Frontend + backend together:
 
 ```bash
 npm run dev
 ```
 
-- Frontend: `http://localhost:5173`
-- Backend API: `http://localhost:5001`
+Frontend only:
 
-## API endpoints
-
-- `POST /api/onboarding` → create chatbot setup
-- `GET /api/onboarding/:id` → fetch saved setup
-- `POST /api/chatbots/:id/simulate` → simulate customer question and chatbot response
-- `GET /api/health` → health check
-
-### Simulation request example
-
-`POST /api/chatbots/:id/simulate`
-
-```json
-{
-	"customerPhone": "+919999999999",
-	"customerName": "Rahul",
-	"question": "What are your timings and can I book for tomorrow?"
-}
+```bash
+npm run dev:client
 ```
 
-## Manual steps required for real WhatsApp go-live
+Backend only:
 
-This prototype generates the chatbot configuration. To make it live on WhatsApp for real users, you must manually connect:
+```bash
+npm run dev:server
+```
 
-1. WhatsApp Business API provider (Meta Cloud API / Twilio / Gupshup / Interakt)
-2. Webhook endpoint in backend to receive incoming WhatsApp messages
-3. Message sending API call from backend to WhatsApp provider
-4. Deploy backend to a public HTTPS server
-5. Store provider credentials in environment variables securely
+Production frontend build:
 
-## Suggested next improvements
+```bash
+npm run build
+```
 
-- Add authentication for shop owners
-- Add dashboard to edit chatbot responses after onboarding
-- Integrate OpenAI/Gemini API for dynamic conversation replies
-- Add webhook logs + message analytics
+Backend production start:
 
+```bash
+npm start
+```
+
+Default local URLs:
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:5001`
+- Health check: `http://localhost:5001/api/health`
+
+## Deployment
+
+### Vercel frontend
+
+1. Import the repo into Vercel.
+2. Use:
+   - Framework preset: `Vite`
+   - Build command: `npm run build`
+   - Output directory: `dist`
+3. Add environment variable:
+   - `VITE_API_URL=https://your-render-backend.onrender.com`
+4. Deploy. The included `vercel.json` rewrites SPA routes to `index.html`.
+5. Make sure the Render backend CORS list includes the exact Vercel domain, for example:
+   - `CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app`
+
+### Render backend
+
+1. Create a new Web Service from this repo.
+2. Use:
+   - Build command: `npm install`
+   - Start command: `npm run server`
+3. Add environment variables:
+   - `NODE_ENV=production`
+   - `PORT=10000`
+   - `HOST=0.0.0.0`
+   - `MONGODB_URI=...`
+   - `MONGODB_DB_NAME=ai_agent_marketplace`
+   - `JWT_SECRET=...`
+   - `JWT_EXPIRES_IN=7d`
+   - `RESET_TOKEN_TTL_MINUTES=15`
+   - `BRAIN_MODE=rules` or `hybrid`
+   - `GEMINI_API_KEY=...` if using Gemini
+   - `CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app,https://your-custom-domain.com`
+4. After Render assigns the public backend URL, set that URL in Vercel as `VITE_API_URL`.
+
+The repository also includes a starter `render.yaml` if you want infrastructure-as-config.
